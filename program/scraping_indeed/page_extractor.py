@@ -19,7 +19,8 @@ def extract_page():
 def extract_jobs(last_page):
     jobs = []
     for page in range(last_page):
-        result = requests.get(f"{URL}&start={0 * LIMIT}")
+        print(f"Scrapping page {page}")
+        result = requests.get(f"{URL}&start={page * LIMIT}")
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
         for result in results:
@@ -38,4 +39,6 @@ def extract_job(html):
         company = str(company.string)
     company = company.strip()
     location = html.find("span",  {"class": "location"}).string
-    return {"title": title, "company": company, "location": location}
+    job_id = html["data-jk"]
+    return {"title": title, "company": company, "location": location,
+            "link": f"https://www.indeed.com/viewjob?jk={job_id}"}
