@@ -1,7 +1,9 @@
-from page_extractor import extract_page, extract_jobs
+from indeed import get_jobs as get_indeed_jobs
+from so import get_jobs as get_so_jobs
 
-last_page = extract_page()
+indeed_jobs = get_indeed_jobs()
+so_jobs = get_so_jobs()
 
-jobs = extract_jobs(last_page)
+jobs = so_jobs + indeed_jobs
 
 print(jobs)
