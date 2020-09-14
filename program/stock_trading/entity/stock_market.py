@@ -1,21 +1,21 @@
 import random
+import math
 
 
 class StockMarket:
     def __init__(self):
-        self.price = 400
         self.day = 0
         self.fee = 0.015
         self.stock = Stock()
         self.stock_price_history = []
 
-    def get_stock_price(self, count):
-        return self.stock.price + (self.stock.price * count * self.fee)
+    def get_stock_price_with_fee(self):
+        return math.trunc(self.stock.price + (self.stock.price * self.fee))
 
-    def set_stock_price(self):
+    def open(self):
         self.day += 1
         self.stock.price += random.randint(-200, 200)
-        stock_price = StockPrice(self.day, self.price)
+        stock_price = StockPrice(self.day, self.stock.price)
         self.stock_price_history.append(stock_price)
 
     def print_stock_history(self):
