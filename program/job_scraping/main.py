@@ -15,4 +15,13 @@ html = dict["data"]["template"]
 
 soup = BeautifulSoup(html, "html.parser")
 
+body = soup.find("div", {"id": "company-list"})
+
+companies = body.find_all("div", {"class": "company"})
+for company in companies:
+    company_id = company["data-company_id"]
+    company_name = company.find("div", {"class": "company-name"})
+    company_name = company_name.find("h4", {"class": "header"})
+    company_name = company_name.find("strong").string
+    # print(job.find("h4", {"class", "header"}))
 
