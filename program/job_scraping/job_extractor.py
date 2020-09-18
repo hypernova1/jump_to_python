@@ -2,16 +2,13 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+
 URL = f"https://www.rocketpunch.com/api/jobs/template?location=서울특별시&specialty=Java&specialty=JSP&tag=웹서비스&tag=e-commerce"
 
 
 def extract_total_page():
-    response = requests.get(URL)
-    json_dumps = json.dumps(response.text)
-    json_data = json.loads(json_dumps)
-    json_data = json.loads(json_data)
-    body = json_data["data"]["template"]
-    soup = BeautifulSoup(body, "html.parser")
+    html = extract_html(URL)
+    soup = BeautifulSoup(html, "html.parser")
     pagination = soup.find("div", {"class": "pagination"})
     pagination = pagination.find("div", {"class", "widescreen"})
     return int(pagination.find_all("a", {"class": "item"})[-1].string)
@@ -20,11 +17,8 @@ def extract_total_page():
 def extract_rocket_jobs(total_page):
     company_infos = []
     for page in range(total_page):
-        req = requests.get(f"{URL}&page={page + 1}")
-        st_json = json.dumps(req.text)
-        dict = json.loads(st_json)
-        dict = json.loads(dict)
-        html = dict["data"]["template"]
+        url = f"{URL}&page={page + 1}"
+        html = extract_html(url)
         soup = BeautifulSoup(html, "html.parser")
         body = soup.find("div", {"id": "company-list"})
         companies = body.find_all("div", {"class": "company"})
@@ -48,3 +42,13 @@ def extract_company_info(company):
 def get_rocket_jobs():
     total_page = extract_total_page()
     return extract_rocket_jobs(total_page)
+
+
+def extract_html(url):
+    response = requests.get(url)
+    st_json = json.dumps(response.text)
+    dict = json.loads(st_json)
+    dict = json.loads(dict)
+    html = dict["data"]["template"]
+    return html
+
